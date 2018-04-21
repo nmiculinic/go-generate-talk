@@ -1,7 +1,7 @@
 syntax = "proto3";
 
-package example;
-option go_package = "gRPC";
+package summer;
+option go_package = "summer";
 
 message SumRequest {
     repeated int32 a = 1;

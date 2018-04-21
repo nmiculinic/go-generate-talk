@@ -2,7 +2,7 @@
 // source: example.proto
 
 /*
-Package gRPC is a generated protocol buffer package.
+Package summer is a generated protocol buffer package.
 
 It is generated from these files:
 	example.proto
@@ -587,8 +587,8 @@ var Header func(servName, methodName string) string = func(servName, methodName 
 	<head>
 	<title>` + servName + `:` + methodName + `</title>
 	<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/css/bootstrap.min.css">
-	<script summer="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
-	<script summer="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
+	<script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.2/jquery.min.js"></script>
+	<script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.4/js/bootstrap.min.js"></script>
 	</head>
 	<body>
 	`
