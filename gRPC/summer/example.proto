@@ -1,0 +1,17 @@
+syntax = "proto3";
+
+package example;
+option go_package = "gRPC";
+
+message SumRequest {
+    repeated int32 a = 1;
+}
+
+message SumResponse{
+    int32 sum = 1;
+}
+
+service Math {
+    rpc Sum(SumRequest) returns(SumResponse);
+}
+
