@@ -2,6 +2,12 @@
 
 
 [[projects]]
+  branch = "master"
+  name = "github.com/cheekybits/genny"
+  packages = ["generic"]
+  revision = "9127e812e1e9e501ce899a18121d316ecb52e4ba"
+
+[[projects]]
   name = "github.com/gogo/protobuf"
   packages = ["proto"]
   revision = "1adfc126b41513cc696b209667c8656ea7aac67c"
@@ -94,6 +100,6 @@
 [solve-meta]
   analyzer-name = "dep"
   analyzer-version = 1
-  inputs-digest = "f631c013c4eb0575307082312992d140ae5ecdac4468f465a45a4203c389aff1"
+  inputs-digest = "f331e580f8d08bce93fbbc320a84a7c5e623c3b8e8064ffd10cbba2d1b51db3c"
   solver-name = "gps-cdcl"
   solver-version = 1
