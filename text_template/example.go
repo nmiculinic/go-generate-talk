@@ -1,4 +1,4 @@
-package template_text
+package text_template
 
 //go:generate bash -c "go run ./bin/* -- $GOFILE"
 type FInt interface {

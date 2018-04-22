@@ -1,4 +1,4 @@
-package template_text
+package genny_template
 
 //go:generate genny -in=$GOFILE -out=gen-$GOFILE gen "TypeT=string,int"
 
