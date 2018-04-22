@@ -6,9 +6,8 @@ import "github.com/cheekybits/genny/generic"
 
 type TypeT generic.Type
 
-type EmptyTypeT struct {}
+type EmptyTypeT struct{}
 
-func (* EmptyTypeT) Filter(in map[string]TypeT) map[string]TypeT {
+func (*EmptyTypeT) Filter(in map[string]TypeT) map[string]TypeT {
 	return in
 }
-

@@ -7,4 +7,3 @@ type FInt interface {
 type FString interface {
 	Filter(map[string]string) map[string]string
 }
-

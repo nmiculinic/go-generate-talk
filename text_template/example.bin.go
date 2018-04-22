@@ -18,7 +18,6 @@ func (f *ComposeInt) Filter(in map[string]int) map[string]int {
 	return out
 }
 
-
 type EmptyString struct{}
 
 func (f *EmptyString) Filter(in map[string]string) map[string]string {
@@ -34,5 +33,3 @@ func (f *ComposeString) Filter(in map[string]string) map[string]string {
 	}
 	return out
 }
-
-

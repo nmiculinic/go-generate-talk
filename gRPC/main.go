@@ -1,16 +1,17 @@
 package main
 
 import (
+	"context"
+	"fmt"
 	"github.com/nmiculinic/go-generate-talk/gRPC/summer"
 	"google.golang.org/grpc"
 	"log"
-	"context"
-	"fmt"
 	"net"
 )
 
 type Math int
-func (Math) Sum(ctx context.Context, req *summer.SumRequest) (*summer.SumResponse, error){
+
+func (Math) Sum(ctx context.Context, req *summer.SumRequest) (*summer.SumResponse, error) {
 	if len(req.A) == 0 {
 		return nil, fmt.Errorf("no elements to sum")
 	}
@@ -19,7 +20,7 @@ func (Math) Sum(ctx context.Context, req *summer.SumRequest) (*summer.SumRespons
 		sol += x
 	}
 	return &summer.SumResponse{
-		Sum:sol,
+		Sum: sol,
 	}, nil
 }
 
