@@ -1,27 +1,26 @@
 package main
 
-
 import (
+	"bytes"
 	"flag"
-	"text/template"
-	"go/token"
-	"go/printer"
+	"fmt"
+	"github.com/Masterminds/sprig"
+	"go/ast"
+	"go/format"
+	_ "go/format"
 	"go/parser"
+	"go/printer"
+	"go/token"
 	"log"
 	"os"
-	"fmt"
-	"go/ast"
 	"strings"
-	_ "go/format"
-	"bytes"
-	"github.com/Masterminds/sprig"
-	"go/format"
+	"text/template"
 )
 
 type TemplateValues struct {
-	Name string
+	Name    string
 	Results []string
-	Args []string
+	Args    []string
 }
 
 const tmp = `
@@ -38,11 +37,11 @@ func {{ .Name }}Chan(in chan<- {{.Name}}Req, out <-chan {{ .Name }}Resp) {
 `
 
 func main() {
-	in := flag.String("in","", "input file")
-	out := flag.String("out","", "out")
-	quiet := flag.Bool("q",false, "quiet mode")
+	in := flag.String("in", "", "input file")
+	out := flag.String("out", "", "out")
+	quiet := flag.Bool("q", false, "quiet mode")
 	flag.Parse()
-	if *in == ""  || *out == "" {
+	if *in == "" || *out == "" {
 		flag.Usage()
 		return
 	}
@@ -68,29 +67,13 @@ func main() {
 	for _, decl := range f.Decls {
 		switch decl.(type) {
 		case *ast.FuncDecl:
-			decl := decl.(*ast.FuncDecl)  // For better autocompletion
+			decl := decl.(*ast.FuncDecl) // For better autocompletion
 			if decl.Doc == nil {
 				continue
 			}
 			for _, comm := range decl.Doc.List {
 				if strings.HasPrefix(comm.Text, "//@decorate:chan") {
-					reqStructName := decl.Name.Name + "Req"
-					respStructName := decl.Name.Name + "Resp"
-					out := &bytes.Buffer{}
-					reqStruct, reqElems := makeStruct(decl.Type.Params,reqStructName, fs, usedImports)
-					respStruct, respElems := makeStruct(decl.Type.Results,respStructName, fs, usedImports)
-
-					fmt.Fprintln(out, reqStruct)
-					fmt.Fprintln(out, respStruct)
-					t.Execute(out, TemplateValues{
-						Name:decl.Name.Name,
-						Results:respElems,
-						Args:reqElems,
-					})
-					elems = append(elems, out.String())
-					if !*quiet {
-						log.Println("generating func for", decl.Name.Name)
-					}
+					elems = append(elems, handleFunc(decl, fs, usedImports, t, quiet))
 				}
 			}
 		default:
@@ -131,11 +114,38 @@ func main() {
 		log.Fatal(err)
 	}
 }
-
+func handleFunc(
+	decl *ast.FuncDecl,
+	fs *token.FileSet,
+	usedImports map[string]bool,
+	t *template.Template,
+	quiet *bool) string {
+	reqStructName := decl.Name.Name + "Req"
+	respStructName := decl.Name.Name + "Resp"
+	out := &bytes.Buffer{}
+	reqStruct, reqElems := makeStruct(decl.Type.Params, reqStructName, fs, usedImports)
+	respStruct, respElems := makeStruct(decl.Type.Results, respStructName, fs, usedImports)
+	fmt.Fprintln(out, reqStruct)
+	fmt.Fprintln(out, respStruct)
+	t.Execute(out, TemplateValues{
+		Name:    decl.Name.Name,
+		Results: respElems,
+		Args:    reqElems,
+	})
+	if !*quiet {
+		log.Println("generating func for", decl.Name.Name)
+	}
+	return out.String()
+}
 
 // makeStruct created struct with all required fields in the FieldList
-func makeStruct(fields *ast.FieldList, structName string, fs *token.FileSet, usedImports map[string]bool) (string, []string){
-	s:= &bytes.Buffer{}
+func makeStruct(
+	fields *ast.FieldList,
+	structName string,
+	fs *token.FileSet,
+	usedImports map[string]bool,
+) (string, []string) {
+	s := &bytes.Buffer{}
 	fmt.Fprintf(s, "type %s struct {\n", structName)
 	ListNames := make([]string, 0, len(fields.List))
 	for i, inp := range fields.List {
